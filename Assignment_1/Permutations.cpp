@@ -1,14 +1,9 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <ctype.h>
 
-// function which returns lowercase character for uppercase english symbol
-// for any other characters it returs the character itself
-char to_lower(char c) {
-    return c >= 'A' && c<= 'Z' ? c - ('A' - 'a') : c;
-}
-
-// This function takes references for 2 strings and return:
+// This function takes references for 2 strings and returns:
 // * false, if the strings are not permutations of each other
 // * true, if the strings are permutations of each other
 //
@@ -30,16 +25,16 @@ bool CheckPermutations(const std::string& a, const std::string& b) {
     for (int i = 0; i < a.size(); i++) {
         // we use to_lower(...) because CheckPermutations(a, b) function isn't case-sensitive
         // for English alphabets
-        char ai = to_lower(a[i]);
-        char bi = to_lower(b[i]);
-        alph[ai] = alph[ai] + 1;
-        alph[bi] = alph[bi] - 1;
+        char ai = tolower(a[i]);
+        char bi = tolower(b[i]);
+        alph[ai]++;
+        alph[bi]--;
     }
 
     // the idea is that if we have 2 permutations all of alph's keys will be zeros
     // in other case there will be at least a one key which != 0
-    for (std::map<char, int>::iterator it = alph.begin(); it != alph.end(); it++)
-        if (it->second != 0)
+    for (const auto& it : alph)
+        if (it.second != 0)
             return false;
     return true;
 }

@@ -3,34 +3,26 @@
 #include <stdexcept>
 #include <sstream>
 
+template <class T>
 class TLinkedList {
     struct TListNode {
-        int value;
+        T value;
         TListNode* next;
 
-        TListNode(int val) : value(val), next(nullptr) {}
+        TListNode(T val) : value(val), next(nullptr) {}
     };
 
     TListNode* root = nullptr;
+    TListNode* tail = nullptr;
     int list_size = 0;
 
 public:
     TLinkedList() {}
 
     // Makes list with values from the given vector values
-    TLinkedList(std::vector<int>& values) {
-        TListNode* list;
-        for (std::vector<int>::iterator it = values.begin(); it != values.end(); it++) {
-            TListNode* item = new TListNode(*it);
-            list_size++;
-
-            if (root != nullptr) {
-                list->next = item;
-                list = list->next;
-            } else {
-                root = item;
-                list = root;
-            }
+    TLinkedList(const std::vector<T>& values) {
+        for (const T& it : values) {
+            Push(it);
         }
     }
 
@@ -79,13 +71,17 @@ public:
     }
 
     // Adds new item to the list
-    int Push(int val) {
-        TListNode* list = root;
-        while (list->next != nullptr)
-            list = list->next;
-
+    int Push(T val) {
         TListNode* newIt = new TListNode(val);
-        list->next = newIt;
+
+        if (!tail) {
+            root = newIt;
+            tail = root;
+        } else {
+            tail->next = newIt;
+            tail = tail->next;
+        }
+
         list_size++;
 
         return list_size;
@@ -106,12 +102,12 @@ public:
 
 int main() {
     std::cout << "Checking empty list" << std::endl;
-    TLinkedList zeroList;
+    TLinkedList<int> zeroList;
     zeroList.Print(std::cout);
     std::cout << std::endl;
 
     std::vector<int> values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    TLinkedList list(values);
+    TLinkedList<int> list(values);
     std::cout << "Checking constructor with vector {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}" << std::endl;
     list.Print(std::cout);
     std::cout << std::endl;
