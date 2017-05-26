@@ -9,7 +9,7 @@ class TLinkedList {
         T value;
         TListNode* next;
 
-        TListNode(T val) : value(val), next(nullptr) {}
+        TListNode(const T& val) : value(val), next(nullptr) {}
     };
 
     TListNode* root = nullptr;
