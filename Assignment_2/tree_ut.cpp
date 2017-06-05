@@ -41,6 +41,15 @@ TEST(TBinaryTree, ConstructFromBottomToUp) {
     EXPECT_EQ(1, complexTree->GetLeft()->GetDepth());
 }
 
+TEST(TBinaryTree, TryConstructUsingAnotherTreeSubtree) {
+    auto tree = GenerateSimpleTree(1, 2, 3);
+    // Try to use the subtree in this way:
+    //    1           0
+    //  2  3  --> [3]   null
+    EXPECT_THROW(new TBinaryTree<int>(0, tree->GetRight(), nullptr), std::invalid_argument);
+    EXPECT_THROW(new TBinaryTree<int>(0, nullptr, tree->GetRight()), std::invalid_argument);
+}
+
 TEST(TBinaryTree, SetLeft) {
     int leftKey = 1, rootKey = 0;
     auto left = GenerateSimpleTree(leftKey, 2, 3);
@@ -59,6 +68,28 @@ TEST(TBinaryTree, SetRight) {
 
     EXPECT_EQ(rightKey, tree->GetRight()->GetKey());
     EXPECT_EQ(1, tree->GetRight()->GetDepth());
+}
+
+TEST(TBinaryTree, SetChildMultipleOwners) {
+    // The tree is:
+    //     0
+    //   1   2
+    // 3
+    std::vector<int> values = {0, 1, 2, 3, 4};
+    auto tree = TBinaryTree<int>::BuildFullBinaryTree(values);
+
+    // Now we'll take pointer to node with key == 3 and will try to set it
+    // to the right child of the node with key == 2:
+    //     0
+    //   1   2
+    // 3 ----> [3]
+    auto subtree = tree->GetLeft()->GetLeft();
+    EXPECT_THROW(tree->GetRight()->SetRight(subtree), std::invalid_argument);
+    // And to the left child:
+    //       0
+    //   1      2
+    // 3 --> [3]
+    EXPECT_THROW(tree->GetRight()->SetLeft(subtree), std::invalid_argument);
 }
 
 TEST(TBinaryTree, FindKey) {
@@ -90,27 +121,60 @@ TEST(TBinaryTree, BuildFullBinaryTree) {
     EXPECT_THROW(TBinaryTree<int>::BuildFullBinaryTree(empty), std::invalid_argument);
 }
 
+void PrintAncestorsTest(TBinaryTree<int>* tree, int key, const std::string& expected) {
+    std::ostringstream ssResult;
+    EXPECT_TRUE(tree->PrintAncestors(key, ssResult));
+    EXPECT_EQ(expected, ssResult.str());
+}
+
+TEST(TBinaryTree, PrintAncestorsSimple) {
+    // The tree is:
+    //     0
+    //   1   2
+    // 3  4
+    std::vector<int> values = {0, 1, 2, 3, 4};
+    auto tree = TBinaryTree<int>::BuildFullBinaryTree(values);
+
+    // Root doesn't have any ancestor
+    {
+        int key = 0;
+        std::ostringstream ssExpected;
+        ssExpected << "All ancestors of the node " << key << ":" << std::endl;
+        PrintAncestorsTest(tree, key, ssExpected.str());
+    }
+    {
+        int key = 2;
+        std::ostringstream ssExpected;
+        ssExpected << "All ancestors of the node " << key << ": 0" << std::endl;
+        PrintAncestorsTest(tree, key, ssExpected.str());
+    }
+    {
+        int key = 4;
+        std::ostringstream ssExpected;
+        ssExpected << "All ancestors of the node " << key << ": 1 0" << std::endl;
+        PrintAncestorsTest(tree, key, ssExpected.str());
+    }
+}
+
 TEST(TBinaryTree, PrintAncestors) {
     std::vector<int> values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     auto tree = TBinaryTree<int>::BuildFullBinaryTree(values);
 
     for (int i = 0; i < values.size(); i++) {
-        std::ostringstream ss;
-        ss << "All ancestors of the node " << values[i] << ":";
+        std::ostringstream ssExpected;
+        ssExpected << "All ancestors of the node " << values[i] << ":";
 
         int j = (i - 1) / 2;
         while (j > 0) {
-            ss << " " << values[j];
+            ssExpected << " " << values[j];
             j = (j - 1) / 2;
         }
         if (i) {
-            ss << " " << values[0];
+            ssExpected << " " << values[0];
         }
-        ss << std::endl;
+        ssExpected << std::endl;
 
-        std::ostringstream ssResult;
-        EXPECT_TRUE(tree->PrintAncestors(values[i], ssResult));
-        EXPECT_EQ(ss.str(), ssResult.str());
+        PrintAncestorsTest(tree, values[i], ssExpected.str());
     }
 
     std::ostringstream ssFalse;

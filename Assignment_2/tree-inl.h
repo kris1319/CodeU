@@ -10,10 +10,16 @@ TBinaryTree<T>::TBinaryTree(const T& key, unsigned depth, TBinaryTree<T>* left, 
     , Left(left)
     , Right(right)
 {
-    if (Left)
+    if (Left) {
+        if (Left->Parent)
+            throw std::invalid_argument("The tree given by left child pointer is already a subtree of some another tree.");
         Left->Parent = this;
-    if(Right)
+    }
+    if(Right) {
+        if (Right->Parent)
+            throw std::invalid_argument("The tree given by right child pointer is already a subtree of some another tree.");
         Right->Parent = this;
+    }
 }
 
 template <class T>
@@ -63,21 +69,22 @@ TBinaryTree<T>* TBinaryTree<T>::BuildTree(const std::vector<T>& values, int idxR
 
     int idxLeft = 2 * idxRoot + 1;
     int idxRight = idxLeft + 1;
-    return new TBinaryTree(values[idxRoot], depth, BuildTree(values, idxLeft, depth + 1), BuildTree(values, idxRight, depth + 1));
+    return new TBinaryTree(values[idxRoot], depth, BuildTree(values, idxLeft, depth + 1),
+                           BuildTree(values, idxRight, depth + 1));
 }
 
 template <class T>
-void TBinaryTree<T>::Print(std::ostream &out) {
+void TBinaryTree<T>::Print(std::ostream &out, std::string levelGap) {
     if (!Parent)
         out << "Root ";
     else
-        out << Parent->Key << " -> ";
+        out << levelGap << Parent->Key << " -> ";
     out << Key << "(" << Depth << ")" << std::endl;
 
     if (Left)
-        Left->Print(out);
+        Left->Print(out, levelGap + levelGap);
     if (Right)
-        Right->Print(out);
+        Right->Print(out, levelGap + levelGap);
 }
 
 template <class T>
@@ -100,10 +107,14 @@ void TBinaryTree<T>::ComputeDepths(unsigned depth) {
 
 template <class T>
 TBinaryTree<T>* TBinaryTree<T>::SetLeft(TBinaryTree<T>* left) {
+    if (left && left->Parent)
+        throw std::invalid_argument("The tree given by left child pointer is already a subtree of some another tree.");
+
     if (Left)
         delete Left;
 
     Left = left;
+    Left->Parent = this;
     Left->ComputeDepths(Depth + 1);
 
     return this;
@@ -111,10 +122,14 @@ TBinaryTree<T>* TBinaryTree<T>::SetLeft(TBinaryTree<T>* left) {
 
 template <class T>
 TBinaryTree<T>* TBinaryTree<T>::SetRight(TBinaryTree<T>* right) {
+    if (right && right->Parent)
+        throw std::invalid_argument("The tree given by right child pointer is already a subtree of some another tree.");
+
     if (Right)
         delete Right;
 
     Right = right;
+    Right->Parent = this;
     Right->ComputeDepths(Depth + 1);
 
     return this;
@@ -145,18 +160,13 @@ TBinaryTree<T>* TBinaryTree<T>::FindKey(const T& key) {
     if (Key == key)
         return this;
 
-    if (Left) {
-        TBinaryTree* inLeft = Left->FindKey(key);
-        if (inLeft)
-            return inLeft;
+    for (const auto& child : {Left, Right}) {
+        if (child) {
+            TBinaryTree* inChild = child->FindKey(key);
+            if (inChild)
+                return inChild;
+        }
     }
-
-    if (Right) {
-        TBinaryTree* inRight = Right->FindKey(key);
-        if (inRight)
-            return inRight;
-    }
-
     return nullptr;
 }
 
@@ -181,7 +191,9 @@ TBinaryTree<T>* TBinaryTree<T>::LeastCommonAncestor(TBinaryTree<T>* first, TBina
         second = second->Parent;
     }
 
-    // If they are equal to nullptr the given nodes are from different trees.
+    // Since they start from the same level in the tree, they reach the root
+    // in the same time. If they are from different trees, each of them skips
+    // the root node and will be set in nullptr.
     if (!first)
         throw std::invalid_argument("Given nodes are from different trees.");
     return first;

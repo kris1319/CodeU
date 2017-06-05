@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 // Implementation of a binary tree data structure.
 template <class T>
@@ -39,8 +40,9 @@ public:
     TBinaryTree<T>* GetLeft();
     TBinaryTree<T>* GetRight();
 
-    // In assumption that there are only unique keys in the tree this method returns
-    // pointer to the node with the given key. It uses DFS for searching.
+    // The method returns the first found node with the given key.
+    // If the tree doesn't have any node with the given key the method returns nullptr.
+    // It uses DFS for searching.
     TBinaryTree<T>* FindKey(const T& key);
 
     // Generates full BT by given vector of keys which is string representation of a full BT.
@@ -67,7 +69,7 @@ public:
     // and returns true or false wether there is a such node in the tree.
     bool PrintAncestors(const T& key, std::ostream& out);
     // Prints tree.
-    void Print(std::ostream& out);
+    void Print(std::ostream& out, std::string level = "");
 
 private:
     // Helper constructor for the BuildFullBinaryTree method. It doesn't recompute depths
