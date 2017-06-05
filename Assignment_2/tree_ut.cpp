@@ -54,7 +54,6 @@ TEST(TBinaryTree, SetLeft) {
     int leftKey = 1, rootKey = 0;
     auto left = GenerateSimpleTree(leftKey, 2, 3);
     auto tree = new TBinaryTree<int>(rootKey);
-    tree->SetLeft(nullptr);
     tree->SetLeft(left);
 
     EXPECT_EQ(leftKey, tree->GetLeft()->GetKey());
