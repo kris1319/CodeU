@@ -54,10 +54,15 @@ TEST(TBinaryTree, SetLeft) {
     int leftKey = 1, rootKey = 0;
     auto left = GenerateSimpleTree(leftKey, 2, 3);
     auto tree = new TBinaryTree<int>(rootKey);
+    tree->SetLeft(nullptr);
     tree->SetLeft(left);
 
     EXPECT_EQ(leftKey, tree->GetLeft()->GetKey());
     EXPECT_EQ(1, tree->GetLeft()->GetDepth());
+
+    // Reset the left child
+    tree->SetLeft(nullptr);
+    EXPECT_EQ(nullptr, tree->GetLeft());
 }
 
 TEST(TBinaryTree, SetRight) {
@@ -68,6 +73,10 @@ TEST(TBinaryTree, SetRight) {
 
     EXPECT_EQ(rightKey, tree->GetRight()->GetKey());
     EXPECT_EQ(1, tree->GetRight()->GetDepth());
+
+    // Reset the right child
+    tree->SetRight(nullptr);
+    EXPECT_EQ(nullptr, tree->GetRight());
 }
 
 TEST(TBinaryTree, SetChildMultipleOwners) {

@@ -89,7 +89,6 @@ void TBinaryTree<T>::Print(std::ostream &out, std::string levelGap) {
 
 template <class T>
 TBinaryTree<T>::~TBinaryTree() {
-    std::cout << Key << " ";
     if (Left)
         delete Left;
     if(Right)
@@ -113,9 +112,13 @@ TBinaryTree<T>* TBinaryTree<T>::SetLeft(TBinaryTree<T>* left) {
     if (Left)
         delete Left;
 
-    Left = left;
-    Left->Parent = this;
-    Left->ComputeDepths(Depth + 1);
+    if (left) {
+        Left = left;
+        Left->Parent = this;
+        Left->ComputeDepths(Depth + 1);
+    } else {
+        Left = nullptr;
+    }
 
     return this;
 }
@@ -128,9 +131,13 @@ TBinaryTree<T>* TBinaryTree<T>::SetRight(TBinaryTree<T>* right) {
     if (Right)
         delete Right;
 
-    Right = right;
-    Right->Parent = this;
-    Right->ComputeDepths(Depth + 1);
+    if (right) {
+        Right = right;
+        Right->Parent = this;
+        Right->ComputeDepths(Depth + 1);
+    } else {
+        Right = nullptr;
+    }
 
     return this;
 }

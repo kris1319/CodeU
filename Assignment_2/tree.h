@@ -27,7 +27,8 @@ public:
 
     ~TBinaryTree();
 
-    // Sets left or right subtrees. If there is already subtree it will be deleted.
+    // Sets left or right subtrees. If there is already subtree it will be deleted
+    // whether or not nullptr was given.
     //
     // Notice: these methods recompute depths too, so each of them works
     // O(n) where n is number of items in the left or right subtree.
