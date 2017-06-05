@@ -83,7 +83,7 @@ TEST(TBinaryTree, SetChildMultipleOwners) {
     //     0
     //   1   2
     // 3
-    std::vector<int> values = {0, 1, 2, 3, 4};
+    std::vector<int> values = {0, 1, 2, 3};
     auto tree = TBinaryTree<int>::BuildFullBinaryTree(values);
 
     // Now we'll take pointer to node with key == 3 and will try to set it
