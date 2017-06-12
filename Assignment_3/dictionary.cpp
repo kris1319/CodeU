@@ -33,6 +33,8 @@ void Dictionary::InsertWord(const std::string &word) {
         current = newNode;
     }
 
+    // If word ends in the node there should be empty edge from the node
+    // to a fiction node -1.
     Tree[current]['\0'] = -1;
 }
 
