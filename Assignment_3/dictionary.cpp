@@ -1,10 +1,10 @@
 #include "dictionary.h"
 
 Dictionary::Dictionary() {
-    Tree.push_back(std::map<char, int>());
+    Tree.push_back(std::unordered_map<char, int>());
 }
 
-Dictionary::Dictionary(const std::vector<std::string> vocabulary)
+Dictionary::Dictionary(const std::unordered_set<std::string> vocabulary)
     : Dictionary()
 {
     for (const auto& word : vocabulary) {
@@ -27,15 +27,15 @@ void Dictionary::InsertWord(const std::string &word) {
             continue;
         }
 
-        Tree.push_back(std::map<char, int>());
+        Tree.push_back(std::unordered_map<char, int>());
         int newNode = Tree.size() - 1;
         Tree[current][c] = newNode;
         current = newNode;
     }
 
     // If word ends in the node there should be empty edge from the node
-    // to a fiction node -1.
-    Tree[current]['\0'] = -1;
+    // to a fictitious SinkNode.
+    Tree[current]['\0'] = SinkNode;
 }
 
 int Dictionary::PrefixEndNode(const std::string &prefix) const {
@@ -67,7 +67,7 @@ void Dictionary::SearchTree(int node, std::string& word,
                             std::unordered_set<std::string> &vocabulary) const {
     for (auto const& edge : Tree[node]) {
         if (edge.first == '\0') {
-            vocabulary.insert(std::string(word.begin(), word.end()));
+            vocabulary.insert(word);
             continue;
         }
 

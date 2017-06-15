@@ -3,14 +3,13 @@
 #include <gtest/gtest.h>
 #include <string>
 #include <unordered_set>
-#include <vector>
 
 TEST(Dictionary, EmptyDict) {
     Dictionary dict;
     EXPECT_EQ(dict.GetAllWords().size(), 0);
 }
 
-void ValidateSetOfWords(const std::vector<std::string>& expected,
+void ValidateSetOfWords(const std::unordered_set<std::string>& expected,
                         const std::unordered_set<std::string>& stored) {
     EXPECT_EQ(stored.size(), expected.size());
     for (const auto& word : expected) {
@@ -19,7 +18,7 @@ void ValidateSetOfWords(const std::vector<std::string>& expected,
 }
 
 TEST(Dictionary, DictFromVector) {
-    std::vector<std::string> vocabulary {"aba", "abac", "acd", "bk"};
+    std::unordered_set<std::string> vocabulary {"aba", "abac", "acd", "bk"};
     Dictionary dict(vocabulary);
 
     auto stored = dict.GetAllWords();
@@ -34,18 +33,18 @@ TEST(Dictionary, InsertWord) {
     dict.InsertWord(word);
     EXPECT_TRUE(dict.IsWord(word));
 
-    std::vector<std::string> vocabulary {"aba", "abac", "acd", "bk"};
+    std::unordered_set<std::string> vocabulary {"aba", "abac", "acd", "bk"};
     for (const auto& newWord : vocabulary) {
         dict.InsertWord(newWord);
     }
 
-    vocabulary.push_back(word);
+    vocabulary.insert(word);
     auto stored = dict.GetAllWords();
     ValidateSetOfWords(vocabulary, stored);
 }
 
 TEST(Dictionary, IsPrefix) {
-    std::vector<std::string> vocabulary {"aba", "abac", "acd", "bk", "abacaba"};
+    std::unordered_set<std::string> vocabulary {"aba", "abac", "acd", "bk", "abacaba"};
     Dictionary dict(vocabulary);
 
     for (const auto& word : vocabulary) {
@@ -62,7 +61,7 @@ TEST(Dictionary, IsPrefix) {
 }
 
 TEST(Dictionary, IsWord) {
-    std::vector<std::string> vocabulary {"aba", "abac", "acd", "bk", "abacaba"};
+    std::unordered_set<std::string> vocabulary {"aba", "abac", "acd", "bk", "abacaba"};
     Dictionary dict(vocabulary);
 
     for (const auto& word : vocabulary) {

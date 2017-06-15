@@ -1,29 +1,17 @@
 #include "word_search.h"
 
 WordSearch::~WordSearch() {
-    for (auto& row : Grid) {
-        row.clear();
+    for (int i = 0; i < NRows; i++) {
+        Grid[i].clear();
+        UsedGrid[i].clear();
     }
     Grid.clear();
+    UsedGrid.clear();
 }
 
-std::vector<std::pair<int, int> > WordSearch::GetChildren(int row, int col) {
-    std::vector<std::pair<int, int>> children;
-    for (int r : {-1, 0, 1}) {
-        for (int c : {-1, 0, 1}) {
-            if (!r && !c) {
-                continue;
-            }
-            children.push_back(std::pair<int, int>(row + r, col + c));
-        }
-    }
-
-    return children;
-}
-
-void WordSearch::SearchFromPosition(int row, int col, std::string& current, std::vector<std::vector<bool>>& used,
+void WordSearch::SearchFromPosition(int row, int col, std::string& current,
                                     std::unordered_set<std::string>& valid, const Dictionary& dict) {
-    used[row][col] = true;
+    UsedGrid[row][col] = true;
     current.push_back(Grid[row][col]);
 
     if (dict.IsPrefix(current)) {
@@ -31,22 +19,31 @@ void WordSearch::SearchFromPosition(int row, int col, std::string& current, std:
             valid.insert(current);
         }
 
-        auto children = GetChildren(row, col);
+        std::vector<std::pair<int, int>> children(8);
+        for (int r : {-1, 0, 1}) {
+            for (int c : {-1, 0, 1}) {
+                if (!r && !c) {
+                    continue;
+                }
+                children.push_back(std::pair<int, int>(row + r, col + c));
+            }
+        }
+
         for (const auto& node : children) {
             if (node.first < 0 || node.first >= NRows ||
                 node.second < 0 || node.second >= NColumns) {
                 continue;
             }
 
-            if (used[node.first][node.second]) {
+            if (UsedGrid[node.first][node.second]) {
                 continue;
             }
 
-            SearchFromPosition(node.first, node.second, current, used, valid, dict);
+            SearchFromPosition(node.first, node.second, current, valid, dict);
         }
     }
 
-    used[row][col] = false;
+    UsedGrid[row][col] = false;
     current.pop_back();
 }
 
@@ -55,8 +52,9 @@ std::unordered_set<std::string> WordSearch::Search(const Dictionary& dict) {
     for (int row = 0; row < NRows; row++) {
         for (int col = 0; col < NColumns; col++) {
             std::string word;
-            std::vector<std::vector<bool>> used(NRows, std::vector<bool>(NColumns, false));
-            SearchFromPosition(row, col, word, used, valid, dict);
+            // It's not necessary to reset UsedGrid values because after using some node (i, j)
+            // in the Grid the UsedGrid[i][j] is set to false.
+            SearchFromPosition(row, col, word, valid, dict);
         }
     }
 

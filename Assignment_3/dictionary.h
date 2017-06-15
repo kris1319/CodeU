@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -23,14 +23,16 @@
 // Here * - nodes, / - edges, ^ - means that here the word ends.
 class Dictionary {
     // Graph - a prefix-tree
-    std::vector<std::map<char, int>> Tree;
+    std::vector<std::unordered_map<char, int>> Tree;
+    // Fictitious vertex of the tree in which all words end.
+    const static int SinkNode = -1;
 
 public:
     Dictionary();
     // Construct Dictionary object with internal trie structure with words
     // from vocabulary.
     // Complexity of this method is O(L), where L - total length of all words.
-    Dictionary(const std::vector<std::string> vocabulary);
+    Dictionary(const std::unordered_set<std::string> vocabulary);
 
     ~Dictionary();
 
@@ -51,6 +53,7 @@ public:
 private:
     // Helper function for IsWord() and IsPreix(), returns number of the node where
     // given prefix ends.
+    // If there is no such prefix the method returns 0 which is start vertex.
     int PrefixEndNode(const std::string& prefix) const;
     // Helper function for GetAllWords(), uses dfs for getting all words from the prefix-tree.
     void SearchTree(int node, std::string &word, std::unordered_set<std::string>& vocabulary) const;

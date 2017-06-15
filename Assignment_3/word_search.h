@@ -12,14 +12,17 @@ class WordSearch {
     int NRows;
     int NColumns;
 
-    // Grid with characters
+    // Grid with characters.
     std::vector<std::vector<char>> Grid;
+    // This field is used to mark nodes in the Grid which have been already searched by dfs.
+    std::vector<std::vector<bool>> UsedGrid;
 
 public:
     WordSearch(int nRows, int nCols, const std::vector<std::vector<char>>& grid)
         : NRows(nRows)
         , NColumns(nCols)
         , Grid(grid)
+        , UsedGrid(NRows, std::vector<bool>(NColumns, false))
     {}
 
     ~WordSearch();
@@ -45,8 +48,6 @@ public:
 
 private:
     // Helper function for Search(), implements dfs on the grid.
-    void SearchFromPosition(int row, int col, std::string& current, std::vector<std::vector<bool>>& used,
+    void SearchFromPosition(int row, int col, std::string& current,
                             std::unordered_set<std::string>& valid, const Dictionary &dict);
-    // Helper function, returns vector of children of the given node.
-    std::vector<std::pair<int, int> > GetChildren(int row, int col);
 };

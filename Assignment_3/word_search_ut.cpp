@@ -10,7 +10,7 @@
 TEST(WordSearch, SearchOneChar) {
     std::vector<std::vector<char>> grid {{'a'}};
 
-    std::vector<std::string> words {"abcd", "a", "ab", "cab"};
+    std::unordered_set<std::string> words {"abcd", "a", "ab", "cab"};
 
     Dictionary dict(words);
 
@@ -21,7 +21,7 @@ TEST(WordSearch, SearchOneChar) {
     EXPECT_NE(result.find("a"), result.end());
 }
 
-void Validate(const std::vector<std::string>& expected, const std::unordered_set<std::string>& result) {
+void Validate(const std::unordered_set<std::string>& expected, const std::unordered_set<std::string>& result) {
     EXPECT_EQ(result.size(), expected.size());
     for (const auto& word : expected) {
         EXPECT_NE(result.find(word), result.end());
@@ -31,8 +31,8 @@ void Validate(const std::vector<std::string>& expected, const std::unordered_set
 TEST(WordSearch, SearchSimple) {
     std::vector<std::vector<char>> grid {{'a', 'b'}, {'c', 'd'}};
 
-    std::vector<std::string> valid {"abcd", "a", "ab", "cab"};
-    std::vector<std::string> invalid {"aba", "kat", "abcda"};
+    std::unordered_set<std::string> valid {"abcd", "a", "ab", "cab"};
+    std::unordered_set<std::string> invalid {"aba", "kat", "abcda"};
 
     Dictionary dict(valid);
     for (const auto& word : invalid) {
@@ -46,8 +46,8 @@ TEST(WordSearch, SearchSimple) {
 TEST(WordSearch, Search) {
     std::vector<std::vector<char>> grid {{'a', 'b', 'a'}, {'c', 'b', 'd'}};
 
-    std::vector<std::string> valid {"abca", "a", "abba", "cabd"};
-    std::vector<std::string> invalid {"aaba", "kat", "abcda"};
+    std::unordered_set<std::string> valid {"abca", "a", "abba", "cabd"};
+    std::unordered_set<std::string> invalid {"aaba", "kat", "abcda"};
 
     Dictionary dict(valid);
     for (const auto& word : invalid) {
