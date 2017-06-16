@@ -52,6 +52,10 @@ int Dictionary::PrefixEndNode(const std::string &prefix) const {
 }
 
 bool Dictionary::IsPrefix(const std::string &prefix) const {
+    if (!prefix.length()) {
+        return true;
+    }
+
     return (bool)PrefixEndNode(prefix);
 }
 

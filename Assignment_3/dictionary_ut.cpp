@@ -47,6 +47,7 @@ TEST(Dictionary, IsPrefix) {
     std::unordered_set<std::string> vocabulary {"aba", "abac", "acd", "bk", "abacaba"};
     Dictionary dict(vocabulary);
 
+    EXPECT_TRUE(dict.IsPrefix(""));
     for (const auto& word : vocabulary) {
         std::string prefix;
         for (char c : word) {
