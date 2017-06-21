@@ -16,6 +16,8 @@ class WordSearch {
     std::vector<std::vector<char>> Grid;
     // This field is used to mark nodes in the Grid which have been already searched by dfs.
     std::vector<std::vector<bool>> UsedGrid;
+    // Cash for storing all prefixes at each grid's item to avoid traversing tha same branches
+    std::vector<std::vector<std::unordered_set<std::string>>> BranchCash;
 
 public:
     WordSearch(int nRows, int nCols, const std::vector<std::vector<char>>& grid)
@@ -23,6 +25,7 @@ public:
         , NColumns(nCols)
         , Grid(grid)
         , UsedGrid(NRows, std::vector<bool>(NColumns, false))
+        , BranchCash(NRows, std::vector<std::unordered_set<std::string>>(NColumns, std::unordered_set<std::string>()))
     {}
 
     ~WordSearch();
@@ -50,4 +53,5 @@ private:
     // Helper function for Search(), implements dfs on the grid.
     void SearchFromPosition(int row, int col, std::string& current,
                             std::unordered_set<std::string>& valid, const Dictionary &dict);
+    void ResetBranchCash();
 };

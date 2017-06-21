@@ -4,15 +4,18 @@ WordSearch::~WordSearch() {
     for (int i = 0; i < NRows; i++) {
         Grid[i].clear();
         UsedGrid[i].clear();
+        BranchCash[i].clear();
     }
     Grid.clear();
     UsedGrid.clear();
+    BranchCash.clear();
 }
 
 void WordSearch::SearchFromPosition(int row, int col, std::string& current,
                                     std::unordered_set<std::string>& valid, const Dictionary& dict) {
     UsedGrid[row][col] = true;
     current.push_back(Grid[row][col]);
+    BranchCash[row][col].insert(current);
 
     if (dict.IsPrefix(current)) {
         if (dict.IsWord(current)) {
@@ -38,6 +41,9 @@ void WordSearch::SearchFromPosition(int row, int col, std::string& current,
             if (UsedGrid[node.first][node.second]) {
                 continue;
             }
+            if (BranchCash[node.first][node.second].find(current) != BranchCash[node.first][node.second].end())  {
+                continue;
+            }
 
             SearchFromPosition(node.first, node.second, current, valid, dict);
         }
@@ -58,5 +64,15 @@ std::unordered_set<std::string> WordSearch::Search(const Dictionary& dict) {
         }
     }
 
+    ResetBranchCash();
+
     return valid;
+}
+
+void WordSearch::ResetBranchCash() {
+    for (auto& row : BranchCash) {
+        for (auto& node : row) {
+            node.clear();
+        }
+    }
 }

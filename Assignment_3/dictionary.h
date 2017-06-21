@@ -26,6 +26,8 @@ class Dictionary {
     std::vector<std::unordered_map<char, int>> Tree;
     // Fictitious vertex of the tree in which all words end.
     const static int SinkNode = -1;
+    // Reply code for PrefixEndNode() method
+    const static int NoSuchPrefixCode = -1;
 
 public:
     Dictionary();

@@ -43,7 +43,7 @@ int Dictionary::PrefixEndNode(const std::string &prefix) const {
     for (const char& c : prefix) {
         const auto it = Tree[current].find(c);
         if (it == Tree[current].end()) {
-            return 0;
+            return NoSuchPrefixCode;
         }
         current = it->second;
     }
@@ -52,16 +52,17 @@ int Dictionary::PrefixEndNode(const std::string &prefix) const {
 }
 
 bool Dictionary::IsPrefix(const std::string &prefix) const {
-    if (!prefix.length()) {
-        return true;
+    int node = PrefixEndNode(prefix);
+    if (node == NoSuchPrefixCode) {
+        return false;
     }
 
-    return (bool)PrefixEndNode(prefix);
+    return true;
 }
 
 bool Dictionary::IsWord(const std::string &word) const {
     int node = PrefixEndNode(word);
-    if (!node || Tree[node].find('\0') == Tree[node].end())
+    if (node == NoSuchPrefixCode || Tree[node].find('\0') == Tree[node].end())
         return false;
 
     return true;
