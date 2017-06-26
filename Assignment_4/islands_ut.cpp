@@ -88,17 +88,18 @@ private:
     void dfs(int row, int col, int color) {
         colors_[row][col] = color;
 
-        if (col > 0 && map_[row][col - 1] && !colors_[row][col - 1]) {
-            dfs(row, col - 1, color);
-        }
-        if (row > 0 && map_[row - 1][col] && !colors_[row - 1][col]) {
-            dfs(row - 1, col, color);
-        }
-        if (col < n_cols_ - 1 && map_[row][col + 1] && !colors_[row][col + 1]) {
-            dfs(row, col + 1, color);
-        }
-        if (row < n_rows_ - 1 && map_[row + 1][col] && !colors_[row + 1][col]) {
-            dfs(row + 1, col, color);
+        for (int r : {-1, 0, 1}) {
+            for (int c : {-1, 0, 1}) {
+                if (r && c) {
+                    continue;
+                }
+
+                if (row + r >= 0 && row + r < n_rows_ && col + c >= 0 && col + c < n_cols_) {
+                    if (map_[row + r][col + c] && !colors_[row + r][col + c]) {
+                        dfs(row + r, col + c, color);
+                    }
+                }
+            }
         }
     }
 };
