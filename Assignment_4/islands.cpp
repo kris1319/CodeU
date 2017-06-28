@@ -5,7 +5,6 @@ MapOfIslands::~MapOfIslands() {
         for (auto item : disjoint_sets_[row]) {
             delete item;
         }
-        disjoint_sets_[row].clear();
 
         map_[row].clear();
     }
@@ -22,7 +21,7 @@ MapOfIslands::MapOfIslands(int n_rows, int n_cols, const std::vector<std::vector
 {
     for (int row = 0; row < n_rows_; row++) {
         for (int col = 0; col < n_columns_; col++) {
-            // A set for water items isn't created.
+            // For each island block a set is created
             if (map_[row][col]) {
                 disjoint_sets_[row][col] = new DisjointSet();
             }

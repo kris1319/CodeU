@@ -7,8 +7,8 @@
 // This class implemets boolean map of islands with computing the number of islands on the map.
 // It uses disjoint sets for computing. The algorithm traverse a map only two times, thus
 // the complexity is O(2 * N * M * complexity(disjoint_sets)) where N, M - size of the map.
-// As it was said the complexity of operations on disjoint sets is equal to constant 4.
-// So the total coplexity is O(2 * 4 * N * M) = O(N * M).
+// As it was said the complexity of operations on disjoint sets at most real cases are less
+// then constant 4. So the total coplexity is O(2 * 4 * N * M) = O(N * M).
 class MapOfIslands {
     int n_rows_ = 0;
     int n_columns_ = 0;

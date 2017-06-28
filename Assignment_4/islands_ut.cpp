@@ -2,7 +2,11 @@
 #include "islands.h"
 
 #include <cstdlib>
+#include <ctime>
 #include <gtest/gtest.h>
+#include <iostream>
+#include <random>
+#include <tuple>
 #include <vector>
 
 TEST(MapOfIslands, NumberOfIslandsSimpleSingle) {
@@ -13,7 +17,7 @@ TEST(MapOfIslands, NumberOfIslandsSimpleSingle) {
     };
 
     MapOfIslands map(3, 3, map_values);
-    EXPECT_TRUE(map.NumberOfIslands() == 1);
+    EXPECT_EQ(map.NumberOfIslands(), 1);
 }
 
 TEST(MapOfIslands, NumberOfIslandsSimple) {
@@ -25,7 +29,7 @@ TEST(MapOfIslands, NumberOfIslandsSimple) {
     };
 
     MapOfIslands map(4, 4, map_values);
-    EXPECT_TRUE(map.NumberOfIslands() == 1);
+    EXPECT_EQ(map.NumberOfIslands(), 1);
 }
 
 TEST(MapOfIslands, NumberOfIslandsThreeIslandsLight) {
@@ -37,7 +41,7 @@ TEST(MapOfIslands, NumberOfIslandsThreeIslandsLight) {
     };
 
     MapOfIslands map(4, 4, map_values);
-    EXPECT_TRUE(map.NumberOfIslands() == 3);
+    EXPECT_EQ(map.NumberOfIslands(), 3);
 }
 
 // Naive solution for computing the number of islands.
@@ -50,33 +54,33 @@ class NaiveSolution {
     // The map of islands
     std::vector<std::vector<bool>> map_;
     // Colors of each connected component
-    std::vector<std::vector<int>> colors_;
+    std::vector<std::vector<bool>> used_;
 
 public:
     NaiveSolution(int n_rows, int n_cols, const std::vector<std::vector<bool>>& map)
         : n_rows_(n_rows)
         , n_cols_(n_cols)
         , map_(map)
-        , colors_(n_rows_, std::vector<int>(n_cols_, 0))
+        , used_(n_rows_, std::vector<bool>(n_cols_, false))
     {}
 
     ~NaiveSolution() {
         for (int row = 0; row < n_rows_; row++) {
-            colors_[row].clear();
+            used_[row].clear();
             map_[row].clear();
         }
 
         map_.clear();
-        colors_.clear();
+        used_.clear();
     }
 
     int GetSolution() {
         int color = 0;
         for (int row = 0; row < n_rows_; row++) {
             for (int col = 0; col < n_cols_; col++) {
-                if (map_[row][col] && !colors_[row][col]) {
+                if (map_[row][col] && !used_[row][col]) {
                     color++;
-                    dfs(row, col, color);
+                    dfs(row, col);
                 }
             }
         }
@@ -85,8 +89,8 @@ public:
     }
 
 private:
-    void dfs(int row, int col, int color) {
-        colors_[row][col] = color;
+    void dfs(int row, int col) {
+        used_[row][col] = true;
 
         for (int r : {-1, 0, 1}) {
             for (int c : {-1, 0, 1}) {
@@ -95,8 +99,8 @@ private:
                 }
 
                 if (row + r >= 0 && row + r < n_rows_ && col + c >= 0 && col + c < n_cols_) {
-                    if (map_[row + r][col + c] && !colors_[row + r][col + c]) {
-                        dfs(row + r, col + c, color);
+                    if (map_[row + r][col + c] && !used_[row + r][col + c]) {
+                        dfs(row + r, col + c);
                     }
                 }
             }
@@ -104,19 +108,46 @@ private:
     }
 };
 
-bool GetRandomBool() {
-    return std::rand() % 2;
-}
+std::vector<std::vector<bool>> GenerateMap(int n_rows, int n_cols, float probability) {
+    std::vector<std::vector<bool>> map(n_rows, std::vector<bool>(n_cols));
 
-TEST(MapOfIslands, RandomMap) {
-    int n_rows = 1000, n_cols = 1000;
-    std::vector<std::vector<bool>> map_values(n_rows, std::vector<bool>(n_cols));
-    for (auto& row : map_values) {
+    int seed = std::time(0);
+    std::mt19937 gen(seed);
+    std::bernoulli_distribution distrib(probability);
+    std::cout << "Run with n_rows=" << n_rows << ", n_cols=" << n_cols << ", probability=" << probability
+              << ", seed=" << seed << std::endl;
+
+    for (auto& row : map) {
         for (int col = 0; col < n_cols; col++) {
-            row[col] = GetRandomBool();
+            row[col] = distrib(gen);
         }
     }
 
-    EXPECT_TRUE(NaiveSolution(n_rows, n_cols, map_values).GetSolution() ==
-                MapOfIslands(n_rows, n_cols, map_values).NumberOfIslands());
+    return map;
+}
+
+TEST(MapOfIslands, RandomMaps) {
+    for (int size : {20, 50, 100}) {
+        for (float probability : {0.25, 0.5, 0.75}) {
+            auto map = GenerateMap(size, size, probability);
+            EXPECT_EQ(NaiveSolution(size, size, map).GetSolution(),
+                        MapOfIslands(size, size, map).NumberOfIslands());
+        }
+    }
+}
+
+TEST(MapOfIslands, RandomLargeMaps) {
+    for (int size : {1000, 2000}) {
+        for (float probability : {0.25, 0.5}) {
+            auto map = GenerateMap(size, size, probability);
+            EXPECT_EQ(NaiveSolution(size, size, map).GetSolution(),
+                        MapOfIslands(size, size, map).NumberOfIslands());
+        }
+    }
+}
+
+TEST(MapOfIslands, LargeMapOneIsland) {
+    int size = 2000;
+    std::vector<std::vector<bool>> map(size, std::vector<bool>(size, true));
+    EXPECT_EQ(MapOfIslands(size, size, map).NumberOfIslands(), 1);
 }

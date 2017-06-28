@@ -21,18 +21,20 @@ TEST(DisjointSet, FindSetLeader) {
         DisjointSet* item_first = new DisjointSet();
         first_set.push_back(item_first);
         DisjointSet::UnionSets(lead_first, item_first);
-        EXPECT_TRUE(lead_first->FindSetLeader() == item_first->FindSetLeader());
+        EXPECT_EQ(lead_first->FindSetLeader(), item_first->FindSetLeader());
 
         DisjointSet* item_second = new DisjointSet();
         second_set.push_back(item_second);
+        EXPECT_NE(lead_second->FindSetLeader(), item_second->FindSetLeader());
+
         DisjointSet::UnionSets(lead_second, item_second);
-        EXPECT_TRUE(lead_second->FindSetLeader() == item_second->FindSetLeader());
+        EXPECT_EQ(lead_second->FindSetLeader(), item_second->FindSetLeader());
     }
 
     DisjointSet::UnionSets(lead_first, lead_second);
-    EXPECT_TRUE(lead_first->FindSetLeader() == lead_second->FindSetLeader());
+    EXPECT_EQ(lead_first->FindSetLeader(), lead_second->FindSetLeader());
     for (int i = 0; i < numberOfItems; i++) {
-        EXPECT_TRUE(first_set[i]->FindSetLeader() == second_set[i]->FindSetLeader());
+        EXPECT_EQ(first_set[i]->FindSetLeader(), second_set[i]->FindSetLeader());
     }
 
     for (int i = 0; i < numberOfItems; i++) {
@@ -48,9 +50,9 @@ TEST(DisjointSet, UnionSets) {
     DisjointSet* first = new DisjointSet();
     DisjointSet* second = new DisjointSet();
 
-    EXPECT_FALSE(first->FindSetLeader() == second->FindSetLeader());
+    EXPECT_NE(first->FindSetLeader(), second->FindSetLeader());
     DisjointSet::UnionSets(first, second);
-    EXPECT_TRUE(first->FindSetLeader() == second->FindSetLeader());
+    EXPECT_EQ(first->FindSetLeader(), second->FindSetLeader());
 
     delete first;
     delete second;
