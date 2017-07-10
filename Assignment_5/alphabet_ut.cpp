@@ -11,6 +11,7 @@ TEST(Alphabet, SimpleCharsTest) {
     Alphabet alph(dict);
 
     EXPECT_TRUE(alph == Alphabet(alph_val));
+    EXPECT_EQ(alph.GetNumberOfLetters(), alph_val.size());
 }
 
 void PrintAlphabet(const Alphabet& alph) {
@@ -33,6 +34,7 @@ TEST(Alphabet, SimpleWordsTest) {
     Alphabet alph(dict);
 
     EXPECT_TRUE(alph == Alphabet(alph_val));
+    EXPECT_EQ(alph.GetNumberOfLetters(), alph_val.size());
 }
 
 TEST(Alphabet, OneLetterAlphabetTest) {
@@ -48,6 +50,7 @@ TEST(Alphabet, OneLetterAlphabetTest) {
     Alphabet alph(dict);
 
     EXPECT_TRUE(alph == Alphabet(alph_val));
+    EXPECT_EQ(alph.GetNumberOfLetters(), alph_val.size());
 }
 
 TEST(Alphabet, InvalidDictionaryTest) {
@@ -59,4 +62,11 @@ TEST(Alphabet, InvalidDictionaryTest) {
         , "ss"
     };
     EXPECT_THROW(new Alphabet(dict), std::invalid_argument);
+}
+
+TEST(Alphabet, EmptyDictionaryTest) {
+    std::vector<std::string> dict;
+    Alphabet alph(dict);
+
+    EXPECT_EQ(alph.GetNumberOfLetters(), 0);
 }

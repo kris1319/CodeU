@@ -23,6 +23,7 @@ public:
 
     // Constructs an Alphabet object from the given ordered list of words. It uses graph
     // representation and topological sort for ordering letters.
+    // It allows an empty list of words, size of the output alphabet will be 0.
     // It throws std::invalid_argument exception if the given dictionary contains cycles.
     //
     // The graph has all the letters as vertices and the orderings between some two.
