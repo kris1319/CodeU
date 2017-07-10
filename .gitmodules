@@ -7,3 +7,6 @@
 [submodule "Assignment_4/contrib/googletest"]
 	path = Assignment_4/contrib/googletest
 	url = https://github.com/google/googletest.git
+[submodule "Assignment_5/contrib/googletest"]
+	path = Assignment_5/contrib/googletest
+	url = https://github.com/google/googletest.git
