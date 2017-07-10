@@ -23,6 +23,8 @@ public:
 
     // Constructs an Alphabet object from the given ordered list of words. It uses graph
     // representation and topological sort for ordering letters.
+    // It throws std::invalid_argument exception if the given dictionary contains cycles.
+    //
     // The graph has all the letters as vertices and the orderings between some two.
     // letters as edges. For each neighboring pair of words it finds first indice i that
     //                   word_1[i] != word_2[i]
@@ -47,11 +49,12 @@ public:
     bool operator==(const Alphabet& other);
 
 private:
-    // Adds new vertex to the letter graph
+    // Adds new vertex to the letter graph.
     void AddLetterVertex(char v);
-    // Sets directed edge between first not equal pair (second[i], firsrt[i])
+    // Sets directed edge between first not equal pair (second[i], firsrt[i]).
     void SetEdges(const std::string& first, const std::string& second);
-    // Given an ordered list of words builds letter graph
+    // Given an ordered list of words builds letter graph.
     void BuildLetterGraph(const std::vector<std::string>& dictionary);
-    void TopologicalSort(char v, std::unordered_set<char>& used);
+    // Throws std::invalid_argument exception if the given dictionary contains cycles.
+    void TopologicalSort(char v, std::unordered_map<char, int>& used);
 };

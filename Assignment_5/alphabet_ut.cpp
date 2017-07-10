@@ -50,3 +50,13 @@ TEST(Alphabet, OneLetterAlphabetTest) {
     EXPECT_TRUE(alph == Alphabet(alph_val));
 }
 
+TEST(Alphabet, InvalidDictionaryTest) {
+    std::vector<std::string> dict {
+          "absd"
+        , "abbbbb"
+        , "bbb"
+        , "dasdh"
+        , "ss"
+    };
+    EXPECT_THROW(new Alphabet(dict), std::invalid_argument);
+}

@@ -1,9 +1,9 @@
 #include "alphabet.h"
 
-Alphabet::Alphabet(const std::vector<std::string> &dictionary) {
+Alphabet::Alphabet(const std::vector<std::string>& dictionary) {
     BuildLetterGraph(dictionary);
 
-    std::unordered_set<char> used;
+    std::unordered_map<char, int> used;
     for (auto it : letter_graph_) {
         if (used.find(it.first) == used.end()) {
             TopologicalSort(it.first, used);
@@ -58,7 +58,7 @@ void Alphabet::BuildLetterGraph(const std::vector<std::string>& dictionary) {
     }
 }
 
-void Alphabet::SetEdges(const std::string &first, const std::string &second) {
+void Alphabet::SetEdges(const std::string& first, const std::string& second) {
     unsigned skipped = 0;
     unsigned min_size = std::min(first.length(), second.length());
     while (skipped < min_size && second[skipped] == first[skipped]) {
@@ -82,13 +82,16 @@ void Alphabet::SetEdges(const std::string &first, const std::string &second) {
     }
 }
 
-void Alphabet::TopologicalSort(char v, std::unordered_set<char> &used) {
-    used.insert(v);
+void Alphabet::TopologicalSort(char v, std::unordered_map<char, int>& used) {
+    used[v] = 1;
     for (char next : letter_graph_[v]) {
         if (used.find(next) == used.end()) {
             TopologicalSort(next, used);
+        } else if (used[next] == 1) {
+            throw std::invalid_argument("The given dictionary is invalid: it contains cycles.");
         }
     }
 
     alphabet_.push_back(v);
+    used[v] = 2;
 }
