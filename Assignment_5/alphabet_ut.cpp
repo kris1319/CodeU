@@ -40,12 +40,12 @@ TEST(Alphabet, SimpleWordsTest) {
 TEST(Alphabet, OneLetterAlphabetTest) {
     std::vector<char> alph_val {'a'};
     std::vector<std::string> dict {
-          "aaaaaa"
-        , "a"
+          "a"
+        , "aa"
+        , "aa"
         , "aaaa"
-        , "aa"
-        , "aa"
         , "aaaaa"
+        , "aaaaaa"
     };
     Alphabet alph(dict);
 
@@ -69,4 +69,96 @@ TEST(Alphabet, EmptyDictionaryTest) {
     Alphabet alph(dict);
 
     EXPECT_EQ(alph.GetNumberOfLetters(), 0);
+}
+
+void Validate(const std::set<std::string>& expected, const std::vector<std::string>& result) {
+    EXPECT_EQ(expected.size(), result.size());
+    for (const auto& alph : result) {
+        EXPECT_NE(expected.find(alph), expected.end());
+    }
+}
+
+TEST(Alphabet, AllPermutationsSimple) {
+    std::vector<std::string> dict {
+          "aa"
+        , "acc"
+        , "acd"
+        , "bb"
+        , "bd"
+    };
+    std::set<std::string> expected {
+          "dcba"
+        , "dbca"
+    };
+
+    Alphabet alph(dict);
+    Validate(expected, alph.GetAllPossibleAlphabets());
+}
+
+TEST(Alphabet, AllPermutations) {
+    std::vector<std::string> dict {
+          "aa"
+        , "aga"
+        , "agba"
+        , "agbc"
+        , "agbd"
+        , "agd"
+        , "e"
+        , "c"
+    };
+    std::set<std::string> expected {
+          "dcebga"
+        , "dcbega"
+        , "dbcega"
+        , "dcegba"
+        , "dcgeba"
+        , "dgceba"
+        , "gdceba"
+        , "dcbgea"
+        , "dbcgea"
+        , "dcgbea"
+        , "dgcbea"
+        , "gdcbea"
+        , "dbgcea"
+        , "dgbcea"
+        , "gdbcea"
+    };
+
+    Alphabet alph(dict);
+    Validate(expected, alph.GetAllPossibleAlphabets());
+}
+
+TEST(Alphabet, AllPermutationsNFact) {
+    std::vector<std::string> dict {
+          "abcd"
+    };
+    std::set<std::string> expected {
+          "dcba"
+        , "cdba"
+        , "dbca"
+        , "bdca"
+        , "cbda"
+        , "bcda"
+        , "dcab"
+        , "cdab"
+        , "dacb"
+        , "adcb"
+        , "cadb"
+        , "acdb"
+        , "dbac"
+        , "bdac"
+        , "dabc"
+        , "adbc"
+        , "badc"
+        , "abdc"
+        , "cbad"
+        , "bcad"
+        , "cabd"
+        , "acbd"
+        , "bacd"
+        , "abcd"
+    };
+
+    Alphabet alph(dict);
+    Validate(expected, alph.GetAllPossibleAlphabets());
 }
