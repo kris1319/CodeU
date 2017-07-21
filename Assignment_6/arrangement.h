@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <unordered_set>
 #include <vector>
 
 // CarParking class implements N - 1 cars arrangement on the N slots. It provides interface
