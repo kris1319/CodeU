@@ -22,7 +22,7 @@ arrangement_ut.o : arrangement_ut.cpp arrangement.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c arrangement_ut.cpp
 
 unittest : arrangement.o arrangement_ut.o gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -lpthread
 
 clean :
 	rm -rf *.o
