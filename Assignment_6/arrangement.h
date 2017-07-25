@@ -21,8 +21,8 @@ public:
         Action() = default;
 
         Action(unsigned afrom, unsigned ato)
-            : from(afrom)
-            , to(ato)
+                : from(afrom)
+                , to(ato)
         {}
 
         operator bool () const;
@@ -69,7 +69,7 @@ public:
     // the empty slot where the car should be in the new arrangement.
     // One movement contains deleting busy slot and insert new one into the unordered_set of empty slots.
     // Thus the complexity of one movement is constant - O(1). Assume that the number of cycles is K.
-    // Thus it takes O(N + K) to rearrange the cars. So K is less then N thus total complexity is O(N).
+    // Thus it takes O(N + K) to rearrange the cars.
     void Rearrange(const std::vector<unsigned>& new_arrangement);
 
     // Returns current state of the class instance.
@@ -79,20 +79,20 @@ public:
     // It returns an empty vector if there was no updating or if the last state was equal to
     // the previous one.
     std::vector<CarParking::Action> GetLastActions() const;
-    // Prints into the given stream list of actions of the last cars rearranging.
+    // Prints into the given stream list of actions and transitional arrangements of the last cars rearranging.
     void PrintLastActions(std::ostream& out) const;
 
     bool operator==(const CarParking& other) const;
 
 private:
-    // Resets used_cars_ and clears last_actions_.
+    // Resets used_cars_, clears last_actions_ and last_transitional_arrangements_.
     void ResetLastActions();
     // Helper method which initializes helper data structures.
     void SetCarSlots(const std::vector<unsigned>& arrangement, std::vector<unsigned>& car_slots);
 
     // Implements one car movement.
     void ImplementAction(const CarParking::Action& action);
-    // The method traverse the chain/cycle which starts from the 'car' node. It calls itself recursevely
+    // The method traverse the chain/cycle which starts from the 'car' node. It calls itself recursively
     // with the next node of the current chain/cycle.
     void RearrangeChain(unsigned car, const std::vector<unsigned> &car_slots,
                         const std::vector<unsigned>& new_arrangement);
@@ -105,6 +105,8 @@ private:
     std::vector<unsigned> current_car_slots_;
     // The last used algorithm for rearranging cars.
     std::vector<CarParking::Action> last_actions_;
+    // The last used transitional arrangements for rearranging cars;
+    std::vector<std::vector<unsigned>> last_transitional_arrangements_;
 
     // Possible empty slot.
     unsigned empty_slot_;
