@@ -13,9 +13,3 @@
 [submodule "Assignment_6/contrib/googletest"]
 	path = Assignment_6/contrib/googletest
 	url = https://github.com/google/googletest.git
-[submodule "Assignment_6/nana"]
-	path = Assignment_6/nana
-	url = https://github.com/cnjinhao/nana
-[submodule "Assignment_6/contrib/nana"]
-	path = Assignment_6/contrib/nana
-	url = https://github.com/cnjinhao/nana
