@@ -5,9 +5,9 @@ CarParking::Action::operator bool () const {
 }
 
 CarParking::CarParking(const std::vector<unsigned>& arrangement)
-    : number_of_cars_(arrangement.size() ? arrangement.size() - 1 : 0)
-    , arrangement_(arrangement)
-    , current_car_slots_(number_of_cars_)
+        : number_of_cars_(arrangement.size() ? arrangement.size() - 1 : 0)
+        , arrangement_(arrangement)
+        , current_car_slots_(number_of_cars_)
 {
     for (unsigned i = 0; i < arrangement_.size(); i++) {
         if (!arrangement_[i]) {
@@ -28,9 +28,23 @@ std::vector<CarParking::Action> CarParking::GetLastActions() const {
     return last_actions_;
 }
 
-void CarParking::PrintLastActions(std::ostream &out) const {
-    for (const auto& action : last_actions_) {
-        out << "Move from " << action.from << " to " << action.to << std::endl;
+void CarParking::PrintLastActions(std::ostream& out) const {
+    int number_of_actions = last_actions_.size();
+    if (number_of_actions == 0) {
+        out << "There is nothing to move" << std::endl;
+        return;
+    }
+    for (unsigned car : last_transitional_arrangements_[0]) {
+        out << car << " ";
+    }
+    out << std::endl;
+    for (int i = 0; i < number_of_actions; ++i) {
+        out << "Step " << i + 1 << ": " << std::endl;
+        out << "Move from " << last_actions_[i].from << " to " << last_actions_[i].to << std::endl;
+        for (unsigned car : last_transitional_arrangements_[i + 1]) {
+            out << car << " ";
+        }
+        out << std::endl;
     }
 }
 
@@ -87,12 +101,13 @@ void CarParking::SetCarSlots(const std::vector<unsigned> &arrangement, std::vect
 }
 
 void CarParking::ImplementAction(const CarParking::Action &action) {
-    last_actions_.push_back(action);
-
     unsigned car = arrangement_[action.from];
     arrangement_[action.to] = car;
     arrangement_[action.from] = 0;
     current_car_slots_[car - 1] = action.to;
+
+    last_actions_.push_back(action);
+    last_transitional_arrangements_.push_back(arrangement_);
 
     // 'From' slot is empty now.
     empty_slot_ = action.from;
@@ -100,5 +115,8 @@ void CarParking::ImplementAction(const CarParking::Action &action) {
 
 void CarParking::ResetLastActions() {
     last_actions_.clear();
+    last_transitional_arrangements_.clear();
+    last_transitional_arrangements_.push_back(arrangement_);
+
     std::fill(used_cars_.begin(), used_cars_.end(), false);
 }
