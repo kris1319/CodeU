@@ -41,7 +41,7 @@ public:
     // Assume that we have two arrangements - current [a1, a2, ..., aN] and new [b1, b2, ..., bN], thus:
     //
     // * transition is a connection between 2 nodes (or 2 cars) v and u such are:
-    //   current[v_new_idx] = u, where v_new_idx - indice of the vth car in the new arrangement;
+    //   current[v_new_idx] = u, where v_new_idx - index of the vth car in the new arrangement;
     //
     // * chain is a sequence of transitions [v1 -> v2 -> ... -> vK -> 0];
     //
@@ -62,14 +62,14 @@ public:
     // Also it is important that any possible arrangement can be factorized on the set of chains and
     // cycles even if the size of chain/cycle is 1.
     // The main idea of the method is to traverse two given arrangements (current and new) by chains and
-    // cycles and recursevely rearrange each chain and each cycle.
+    // cycles and recursively rearrange each chain and each cycle.
     //
     // Complexity.
-    // On each chain/cycle the algorithm call itself recursevely and after move current node (car) to
-    // the empty slot where the car shoud be in the new arrangement.
+    // On each chain/cycle the algorithm call itself recursively and after move current node (car) to
+    // the empty slot where the car should be in the new arrangement.
     // One movement contains deleting busy slot and insert new one into the unordered_set of empty slots.
     // Thus the complexity of one movement is constant - O(1). Assume that the number of cycles is K.
-    // Thus it takes O(N + K) to rearrange the cars.
+    // Thus it takes O(N + K) to rearrange the cars. So K is less then N thus total complexity is O(N).
     void Rearrange(const std::vector<unsigned>& new_arrangement);
 
     // Returns current state of the class instance.
