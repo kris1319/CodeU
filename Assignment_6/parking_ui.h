@@ -5,7 +5,9 @@
 // ParkingUI class provides UI.
 class ParkingUI {
 public:
-    void Run();
+    static void Run();
+
 private:
-    void Rearrangings(int NumberOfSlots, CarParking& parking);
+    static void Rearrangings(int NumberOfSlots, CarParking& parking);
+    static void GetUsersArrangement(int NumberOfSlots, std::vector<unsigned>& arrangement);
 };
