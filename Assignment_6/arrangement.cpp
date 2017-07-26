@@ -5,9 +5,9 @@ CarParking::Action::operator bool () const {
 }
 
 CarParking::CarParking(const std::vector<unsigned>& arrangement)
-    : number_of_cars_(arrangement.size() ? arrangement.size() - 1 : 0)
-    , arrangement_(arrangement)
-    , current_car_slots_(number_of_cars_)
+        : number_of_cars_(arrangement.size() ? arrangement.size() - 1 : 0)
+        , arrangement_(arrangement)
+        , current_car_slots_(number_of_cars_)
 {
     for (unsigned i = 0; i < arrangement_.size(); i++) {
         if (!arrangement_[i]) {
@@ -29,9 +29,22 @@ std::vector<CarParking::Action> CarParking::GetLastActions() const {
 }
 
 void CarParking::PrintLastActions(std::ostream &out) const {
-    for (const auto& action : last_actions_) {
-        out << "Move from " << action.from << " to " << action.to << std::endl;
+    std::vector<unsigned> arrangement = last_arrangement_;
+    for (unsigned i : arrangement) {
+        out << i << " ";
     }
+    out << std::endl;
+    unsigned step_counter = 0;
+    for (const auto& action : last_actions_) {
+        out << "Step " << ++step_counter << ":" << std::endl;
+        out << "Move from " << action.from << " to " << action.to << std::endl;
+        std::swap(arrangement[action.from], arrangement[action.to]);
+        for (unsigned i : arrangement) {
+            out << i << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "Rearranged by " << step_counter << " steps" << std::endl;
 }
 
 bool CarParking::operator==(const CarParking& other) const {
@@ -100,5 +113,6 @@ void CarParking::ImplementAction(const CarParking::Action &action) {
 
 void CarParking::ResetLastActions() {
     last_actions_.clear();
+    last_arrangement_ = arrangement_;
     std::fill(used_cars_.begin(), used_cars_.end(), false);
 }
