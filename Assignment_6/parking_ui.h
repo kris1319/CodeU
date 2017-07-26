@@ -8,6 +8,6 @@ public:
     static void Run();
 
 private:
-    static void Rearrangings(int NumberOfSlots, CarParking& parking);
-    static void GetUsersArrangement(int NumberOfSlots, std::vector<unsigned>& arrangement);
+    static void Rearrangings(int number_of_slots, CarParking& parking);
+    static void GetUsersArrangement(int number_of_slots, std::vector<unsigned>& arrangement);
 };
