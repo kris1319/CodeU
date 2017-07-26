@@ -18,7 +18,7 @@ void ParkingUI::Run() {
     unsigned number_of_slots;
     std::string user_answer;
 
-    while (1) {
+    while (true) {
         std::cout << "New parking is ready. Set a number of places:" << std::endl;
         std::cin >> number_of_slots;
 
@@ -47,7 +47,7 @@ void ParkingUI::Rearrangings(int number_of_slots, CarParking& parking) {
     }
 
     std::string user_answer;
-    while (1) {
+    while (true) {
         std::cout << "Do you want to rearrange the cars (yes/no)?" << std::endl;
         std::cin >> user_answer;
         if (user_answer == "no") {
