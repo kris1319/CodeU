@@ -21,8 +21,8 @@ public:
         Action() = default;
 
         Action(unsigned afrom, unsigned ato)
-            : from(afrom)
-            , to(ato)
+                : from(afrom)
+                , to(ato)
         {}
 
         operator bool () const;
@@ -105,6 +105,8 @@ private:
     std::vector<unsigned> current_car_slots_;
     // The last used algorithm for rearranging cars.
     std::vector<CarParking::Action> last_actions_;
+    // The last arrangement given by user. Is used to reconstruct the sequence of all transitional arrangements
+    std::vector<unsigned> last_arrangement_;
 
     // Possible empty slot.
     unsigned empty_slot_;
