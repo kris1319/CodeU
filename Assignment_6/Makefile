@@ -6,6 +6,9 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 CXXFLAGS += -g -Wall -Wextra --std=c++11
 
+parking_ui.o : parking_ui.cpp $(GTEST_HEADERS)
+$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c parking_ui.cpp
+
 gtest-all.o : $(GTEST_SRCS)
 	$(CXX) $(CPPFLAGS) -I $(GTEST_DIR) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest-all.cc
 
