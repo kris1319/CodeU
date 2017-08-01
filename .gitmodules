@@ -13,3 +13,6 @@
 [submodule "Assignment_6/contrib/googletest"]
 	path = Assignment_6/contrib/googletest
 	url = https://github.com/google/googletest.git
+[submodule "CodeRetreat/contrib/googletest"]
+	path = CodeRetreat/contrib/googletest
+	url = https://github.com/google/googletest.git
